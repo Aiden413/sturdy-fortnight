@@ -1,0 +1,70 @@
+Mirror.prototype.isContext=function(){
+return this instanceof ContextMirror;
+};
+Mirror.prototype.isScope=function(){
+return this instanceof ScopeMirror;
+};
+Mirror.prototype.isMap=function(){
+return this instanceof MapMirror;
+};
+Mirror.prototype.isSet=function(){
+return this instanceof SetMirror;
+};
+Mirror.prototype.isIterator=function(){
+return this instanceof IteratorMirror;
+};
+Mirror.prototype.allocateHandle_=function(){
+if(q)this.handle_=n++;
+};
+Mirror.prototype.allocateTransientHandle_=function(){
+this.handle_=o--;
+};
+Mirror.prototype.toText=function(){
+return"#<"+this.constructor.name+">";
+};
+function ValueMirror(D,r,E){
+%_Call(Mirror,this,D);
+this.value_=r;
+if(!E){
+this.allocateHandle_();
+}else{
+this.allocateTransientHandle_();
+}
+}
+inherits(ValueMirror,Mirror);
+Mirror.prototype.handle=function(){
+return this.handle_;
+};
+ValueMirror.prototype.isPrimitive=function(){
+var D=this.type();
+return D==='undefined'||
+D==='null'||
+D==='boolean'||
+D==='number'||
+D==='string'||
+D==='symbol';
+};
+ValueMirror.prototype.value=function(){
+return this.value_;
+};
+function UndefinedMirror(){
+%_Call(ValueMirror,this,m.UNDEFINED_TYPE,(void 0));
+}
+inherits(UndefinedMirror,ValueMirror);
+UndefinedMirror.prototype.toText=function(){
+return'undefined';
+};
+function NullMirror(){
+%_Call(ValueMirror,this,m.NULL_TYPE,null);
+}
+inherits(NullMirror,ValueMirror);
+NullMirror.prototype.toText=function(){
+return'null';
+};
+function BooleanMirror(r){
+%_Call(ValueMirror,this,m.BOOLEAN_TYPE,r);
+}
+inherits(BooleanMirror,ValueMirror);
+BooleanMirror.prototype.toText=function(){
+return this.value_?'true':'false';
+};
